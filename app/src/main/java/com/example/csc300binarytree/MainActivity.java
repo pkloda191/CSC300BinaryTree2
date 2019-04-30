@@ -24,9 +24,9 @@ public class MainActivity extends AppCompatActivity
         this.rightButton = this.findViewById(R.id.rightButton);
 
         //get the tree owned by this MainActivity
-        if(this.getIntent().hasExtra("myTree"))
+        if(this.getIntent().hasExtra("secretCode"))
         {
-            this.myTree = (BinaryTree2)this.getIntent().getSerializableExtra("myTree");
+            this.myTree = Core.theVault.getTreeWithSuperSecretCode(this.getIntent().getStringExtra("secretCode"));
         }
         else
         {
@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity
             this.myTree.add(3);
             this.myTree.add(8);
             this.myTree.add(6);
+            Core.theVault.addTree(Integer.toString(Core.currentCode), this.myTree);
         }
 
         this.payloadTV.setText("" + this.myTree.payload);
@@ -58,14 +59,16 @@ public class MainActivity extends AppCompatActivity
     public void onLeftButtonClicked(View vy)
     {
         Intent i = new Intent(this, MainActivity.class);
-        i.putExtra("myTree", this.myTree.left);
+        Core.theVault.addTree(Integer.toString(Core.currentCode), this.myTree.left);
+        i.putExtra("secretCode", Integer.toString(Core.currentCode++));
         this.startActivity(i);
     }
 
     public void onRightButtonClicked(View vy)
     {
         Intent i = new Intent(this, MainActivity.class);
-        i.putExtra("myTree", this.myTree.right);
+        Core.theVault.addTree(Integer.toString(Core.currentCode), this.myTree.right);
+        i.putExtra("secretCode", Integer.toString(Core.currentCode++));
         this.startActivity(i);
     }
 }
